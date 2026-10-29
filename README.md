@@ -11,6 +11,9 @@ a GitHub PR review and turning them into a mitigation plan.
 - Asks for a decision on every comment: apply, select for further analysis,
   skip with comment, or skip without comment
 - Compiles every decision into a mitigation plan to execute later
+- Commit strategy follows review ownership: self-review fixes are folded
+  into the existing commits (amend / fixup + autosquash); handling other
+  reviewers' comments creates new commits
 
 Triage is read-only: no code edits, no GitHub writes. The plan is executed
 in a separate step, only when you ask for it.

@@ -104,7 +104,37 @@ be executed later:
   only; do not post anything)
 - **Skipped** — items with no action
 
-Present the plan and stop there unless the user asks you to execute it.
+Present the plan and stop there unless the user asks you to execute it
+(see Execution Rules below).
+
+## Execution Rules
+
+The plan is applied only when the user asks for it. How changes are
+committed depends on whose review is being handled:
+
+### Self-review — fold fixes into the existing commits
+
+When the triaged review is the user's own review of their own work (or a
+local report produced by the `juju-pr-review` skill in self-review mode),
+do not create new "address review" commits. Keep the history clean by
+amending the existing ones:
+
+- Single-commit branch: apply the fixes and `git commit --amend` into the
+  existing commit.
+- Multi-commit branch: stage each fix as `git commit --fixup=<sha>` of the
+  commit that introduced the code, then fold them with
+  `GIT_SEQUENCE_EDITOR=true git rebase -i --autosquash <base>`.
+- Rewriting history is destructive. Before rebasing: confirm the working
+  tree is clean, the branch belongs to the user, and a force-push is
+  acceptable — use `--force-with-lease`, never plain `--force`. If other
+  reviewers have comments on the PR, fall back to new commits unless the
+  user explicitly accepts the rewrite.
+
+### Someone else's review — new commits
+
+When handling a review from another reviewer on the user's PR, create new
+commits with clear messages addressing the comments. Never amend or
+rebase: the reviewer needs to see the delta as new commits.
 
 ## Harness Adaptation
 
